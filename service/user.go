@@ -4,6 +4,8 @@ import (
 	"github.com/yurongjie2003/ginblog/constant/codes"
 	"github.com/yurongjie2003/ginblog/constant/results"
 	"github.com/yurongjie2003/ginblog/model"
+	"github.com/yurongjie2003/ginblog/utils/Encrypt"
+	"log"
 	"sync"
 )
 
@@ -32,6 +34,12 @@ func (*UserService) AddUser(user *model.User) codes.Code {
 	if exist {
 		return codes.ErrorUsernameUsed
 	}
+	pwdEncrypt, err := Encrypt.Do(user.Password)
+	if err != nil {
+		log.Println("密码加密错误", err)
+		return codes.Error
+	}
+	user.Password = pwdEncrypt
 	code = model.GetUserDao().CreateUser(user)
 	return code
 }
