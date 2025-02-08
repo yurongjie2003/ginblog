@@ -7,6 +7,7 @@ import (
 	"github.com/yurongjie2003/ginblog/model"
 	"github.com/yurongjie2003/ginblog/service"
 	"net/http"
+	"strconv"
 )
 
 // CheckUserExist 查询用户名是否存在
@@ -27,12 +28,18 @@ func AddUser(c *gin.Context) {
 	}
 	code := service.GetUserService().AddUser(&user)
 	user.Password = ""
-	c.JSON(http.StatusOK, results.NewResult(user, code))
+	c.JSON(http.StatusOK, results.NewResult(&user, code))
 }
 
 // GetUserDetail 查询用户详情
 func GetUserDetail(c *gin.Context) {
-
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, results.Error(codes.ErrorArgs))
+		return
+	}
+	user, code := service.GetUserService().GetUserDetail(id)
+	c.JSON(http.StatusOK, results.NewResult(&user, code))
 }
 
 // GetUsers 查询用户列表
@@ -44,10 +51,28 @@ func GetUsers(c *gin.Context) {
 
 // EditUser 编辑用户
 func EditUser(c *gin.Context) {
-
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, results.Error(codes.ErrorArgs))
+		return
+	}
+	var user model.User
+	err = c.ShouldBindJSON(&user)
+	if err != nil {
+		c.JSON(http.StatusOK, results.Error(codes.ErrorArgs))
+		return
+	}
+	code := service.GetUserService().EditUser(id, &user)
+	c.JSON(http.StatusOK, results.NewResult(nil, code))
 }
 
 // DeleteUser 删除用户
 func DeleteUser(c *gin.Context) {
-
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, results.Error(codes.ErrorArgs))
+		return
+	}
+	code := service.GetUserService().DeleteUserById(id)
+	c.JSON(http.StatusOK, results.NewResult(nil, code))
 }

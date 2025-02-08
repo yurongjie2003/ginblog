@@ -47,3 +47,15 @@ func (*UserService) AddUser(user *model.User) codes.Code {
 func (*UserService) GetUsers(pageParams *results.PageParams) (*results.PageResult, codes.Code) {
 	return model.GetUserDao().QueryUsers(pageParams)
 }
+
+func (*UserService) DeleteUserById(id int) codes.Code {
+	return model.GetUserDao().DeleteUserById(id)
+}
+
+func (*UserService) EditUser(id int, user *model.User) codes.Code {
+	return model.GetUserDao().EditUser(id, user)
+}
+
+func (*UserService) GetUserDetail(id int) (model.UserVo, codes.Code) {
+	return model.GetUserDao().GetUserDetail(id)
+}

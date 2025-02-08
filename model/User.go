@@ -65,3 +65,31 @@ func (*UserDao) QueryUsers(pageParams *results.PageParams) (*results.PageResult,
 		Records: users,
 	}, codes.Success
 }
+
+// DeleteUserById 删除用户
+func (*UserDao) DeleteUserById(id int) codes.Code {
+	err := db.Where("id = ?", id).Delete(&User{}).Error
+	if err != nil {
+		return codes.Error
+	}
+	return codes.Success
+}
+
+// EditUser 编辑用户
+func (*UserDao) EditUser(id int, user *User) codes.Code {
+	user.ID = uint(id)
+	err := db.Model(&user).Select("role").Updates(user).Error
+	if err != nil {
+		return codes.Error
+	}
+	return codes.Success
+}
+
+func (*UserDao) GetUserDetail(id int) (UserVo, codes.Code) {
+	var user UserVo
+	err := db.Where("id = ?", id).First(&user).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return user, codes.Error
+	}
+	return user, codes.Success
+}
