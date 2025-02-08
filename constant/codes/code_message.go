@@ -1,15 +1,16 @@
-package code
+package codes
 
 import "errors"
 
 type Code int
 
 const (
-	Success Code = 200
-	Error   Code = 500
+	Success   Code = 200
+	Error     Code = 500
+	ErrorArgs Code = 301
 )
 
-// code 1000... 用户模块
+// codes 1000... 用户模块
 const (
 	ErrorUsernameUsed      Code = 1001
 	ErrorUserPasswordWrong Code = 1002
@@ -20,13 +21,14 @@ const (
 	ErrorTokenFormatWrong  Code = 1007
 )
 
-// code 2000... 文章模块
+// codes 2000... 文章模块
 
-// code 3000... 分类模块
+// codes 3000... 分类模块
 
 var codeToMsg = map[Code]string{
 	Success:                "操作成功",
 	Error:                  "服务器内部错误",
+	ErrorArgs:              "参数错误",
 	ErrorUsernameUsed:      "用户名已被使用",
 	ErrorUserPasswordWrong: "密码错误",
 	ErrorUserNotExist:      "用户不存在",
