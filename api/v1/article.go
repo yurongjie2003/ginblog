@@ -24,12 +24,20 @@ func AddArticle(c *gin.Context) {
 
 // GetArticleDetail 获取文章详情
 func GetArticleDetail(c *gin.Context) {
-
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, results.Error(codes.ErrorArgs))
+		return
+	}
+	article, code := service.GetArticleService().GetArticleDetail(id)
+	c.JSON(http.StatusOK, results.NewResult(&article, code))
 }
 
 // SearchArticles 搜索文章列表
 func SearchArticles(c *gin.Context) {
-
+	pageParams := results.GetPageParams(c)
+	pageResult, code := service.GetArticleService().SearchArticles(pageParams)
+	c.JSON(http.StatusOK, results.NewResult(pageResult, code))
 }
 
 // EditArticle 编辑文章

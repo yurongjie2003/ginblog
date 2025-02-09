@@ -1,7 +1,9 @@
 package model
 
 import (
+	"errors"
 	"github.com/yurongjie2003/ginblog/constant/codes"
+	"github.com/yurongjie2003/ginblog/constant/results"
 	"gorm.io/gorm"
 	"sync"
 )
@@ -41,6 +43,41 @@ func (*ArticleDao) DeleteArticle(id int) codes.Code {
 		return codes.Error
 	}
 	return codes.Success
+}
+
+func (*ArticleDao) GetArticleDetail(id int) (Article, codes.Code) {
+	var article Article
+	err := db.Preload("Category").Where("id = ?", id).First(&article).Error
+	if err != nil {
+		return article, codes.Error
+	}
+	return article, codes.Success
+}
+
+func (d *ArticleDao) SearchArticles(params *results.PageParams) (*results.PageResult, codes.Code) {
+	var articles []*Article
+	var count int64
+	err := db.Preload("Category").Model(&Article{}).Count(&count).Limit(params.PageSize).Offset(params.Offset).Find(&articles).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, codes.Error
+	}
+	return &results.PageResult{
+		Total:   count,
+		Records: articles,
+	}, codes.Success
+}
+
+func (d *ArticleDao) GetCategoryArticles(cid int, params *results.PageParams) (*results.PageResult, codes.Code) {
+	var articles []*Article
+	var count int64
+	err := db.Preload("Category").Model(&Article{}).Where("cid = ?", cid).Count(&count).Limit(params.PageSize).Offset(params.Offset).Find(&articles).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, codes.Error
+	}
+	return &results.PageResult{
+		Total:   count,
+		Records: articles,
+	}, codes.Success
 }
 
 var articleDao *ArticleDao

@@ -33,7 +33,14 @@ func AddCategory(c *gin.Context) {
 
 // GetCategoryArticles 获取单个分类下的文章
 func GetCategoryArticles(c *gin.Context) {
-
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, results.Error(codes.ErrorArgs))
+		return
+	}
+	pageParams := results.GetPageParams(c)
+	pageResult, code := service.GetArticleService().GetCategoryArticles(id, pageParams)
+	c.JSON(http.StatusOK, results.NewResult(pageResult, code))
 }
 
 // GetCategories 查询分类列表
