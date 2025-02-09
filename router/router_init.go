@@ -32,7 +32,7 @@ func Init() error {
 		routerV1.POST("/article/", v1.AddArticle)
 		routerV1.GET("/article/:id", v1.GetArticleDetail)
 		routerV1.GET("/articles", v1.SearchArticles)
-		routerV1.PUT("/article/:id", v1.EditArticle)
+		routerV1.PUT("/article/", v1.EditArticle)
 		routerV1.DELETE("/article/:id", v1.DeleteArticle)
 	}
 	err := r.Run(config.HttpPort)

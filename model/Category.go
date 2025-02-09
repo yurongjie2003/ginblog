@@ -10,7 +10,7 @@ import (
 
 type Category struct {
 	ID   uint   `gorm:"primaryKey;autoIncrement" json:"id"`
-	Name string `gorm:"type:varchar(20);not null" json:"name" binding:"required"`
+	Name string `gorm:"type:varchar(20);not null" json:"name"`
 }
 
 type CategoryDao struct {
@@ -70,4 +70,13 @@ func (d *CategoryDao) EditCategory(category *Category) codes.Code {
 		return codes.Error
 	}
 	return codes.Success
+}
+
+func (*CategoryDao) CheckCategoryExistById(id int) (bool, codes.Code) {
+	var count int64
+	err := db.Model(&Category{}).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		return false, codes.Error
+	}
+	return count > 0, codes.Success
 }
