@@ -22,6 +22,10 @@ const (
 )
 
 // codes 2000... 文章模块
+const (
+	ErrorCategoryNotExist Code = 2001
+	ErrorCategoryExist    Code = 2002
+)
 
 // codes 3000... 分类模块
 
@@ -36,6 +40,9 @@ var codeToMsg = map[Code]string{
 	ErrorTokenExpired:      "Token已过期",
 	ErrorTokenWrong:        "Token无效",
 	ErrorTokenFormatWrong:  "Token格式错误",
+
+	ErrorCategoryNotExist: "分类不存在",
+	ErrorCategoryExist:    "分类已存在",
 }
 
 func GetMsgOfCode(code Code) (string, error) {

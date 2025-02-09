@@ -24,7 +24,7 @@ func Init() error {
 		routerV1.POST("/category/", v1.AddCategory)
 		routerV1.GET("/category/:id/articles", v1.GetCategoryArticles)
 		routerV1.GET("/categories", v1.GetCategories)
-		routerV1.PUT("/category/:id", v1.EditCategory)
+		routerV1.PUT("/category/", v1.EditCategory)
 		routerV1.DELETE("/category/:id", v1.DeleteCategory)
 		routerV1.GET("/category/exist", v1.CheckCategoryExist)
 
