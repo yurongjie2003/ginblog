@@ -21,13 +21,13 @@ const (
 	ErrorTokenFormatWrong  Code = 1007
 )
 
-// codes 2000... 文章模块
+// codes 2000... 分类模块
 const (
 	ErrorCategoryNotExist Code = 2001
 	ErrorCategoryExist    Code = 2002
 )
 
-// codes 3000... 分类模块
+// codes 3000... 文章模块
 
 var codeToMsg = map[Code]string{
 	Success:                "操作成功",
