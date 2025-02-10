@@ -39,7 +39,7 @@ func Do(password string) (string, error) {
 	return stored, nil
 }
 
-func VerifyPassword(storedHash, password string) (bool, error) {
+func CheckPassword(storedHash, password string) (bool, error) {
 	// 解析存储的哈希值
 	parts := strings.Split(storedHash, "$")
 	if len(parts) != 5 {

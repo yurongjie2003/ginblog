@@ -5,6 +5,7 @@ import (
 	"github.com/yurongjie2003/ginblog/constant/results"
 	"github.com/yurongjie2003/ginblog/model"
 	"github.com/yurongjie2003/ginblog/utils/Encrypt"
+	"github.com/yurongjie2003/ginblog/utils/Jwt"
 	"log"
 	"sync"
 )
@@ -58,4 +59,23 @@ func (*UserService) EditUser(id int, user *model.User) codes.Code {
 
 func (*UserService) GetUserDetail(id int) (model.UserVo, codes.Code) {
 	return model.GetUserDao().GetUserDetail(id)
+}
+
+func (*UserService) Login(username string, password string) (string, codes.Code) {
+	user, code := model.GetUserDao().GetUserByUsername(username)
+	if code != codes.Success {
+		return "", code
+	}
+	eq, err := Encrypt.CheckPassword(user.Password, password)
+	if err != nil {
+		return "", codes.Error
+	}
+	if !eq {
+		return "", codes.ErrorUserPasswordWrong
+	}
+	token, err := Jwt.GenerateToken(user.ID)
+	if err != nil {
+		return "", codes.Error
+	}
+	return token, codes.Success
 }

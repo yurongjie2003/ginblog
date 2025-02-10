@@ -93,3 +93,12 @@ func (*UserDao) GetUserDetail(id int) (UserVo, codes.Code) {
 	}
 	return user, codes.Success
 }
+
+func (*UserDao) GetUserByUsername(username string) (*User, codes.Code) {
+	var user User
+	err := db.Where("username = ?", username).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, codes.ErrorUserNotExist
+	}
+	return &user, codes.Success
+}

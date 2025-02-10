@@ -6,13 +6,16 @@ import (
 )
 
 var (
-	AppMode    string
-	HttpPort   string
-	DbHost     string
-	DbPort     string
-	DbUser     string
-	DbPassword string
-	DbName     string
+	AppMode          string
+	HttpPort         string
+	DbHost           string
+	DbPort           string
+	DbUser           string
+	DbPassword       string
+	DbName           string
+	JwtSecret        string
+	JwtEffectiveTime int64
+	JwtIssuer        string
 )
 
 func Init() error {
@@ -22,6 +25,7 @@ func Init() error {
 	}
 	loadServer(file)
 	loadDatabase(file)
+	loadJwt(file)
 	return nil
 }
 
@@ -36,4 +40,10 @@ func loadDatabase(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").MustString("root")
 	DbPassword = file.Section("database").Key("DbPassword").MustString("123456")
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
+}
+
+func loadJwt(file *ini.File) {
+	JwtSecret = file.Section("jwt").Key("JwtSecret").MustString("default_secret")
+	JwtEffectiveTime = file.Section("jwt").Key("JwtEffectiveTime").MustInt64(360)
+	JwtIssuer = file.Section("jwt").Key("JwtIssuer").MustString("ginblog")
 }
