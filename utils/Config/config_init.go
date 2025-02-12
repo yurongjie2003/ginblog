@@ -41,7 +41,8 @@ func Init() error {
 func loadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString("8080")
-	MaxFileSize = file.Section("server").Key("MaxFileSize").MustInt64(5242880)
+	MaxFileSize = file.Section("server").Key("MaxFileSize").MustInt64(5)
+	MaxFileSize = MaxFileSize << 20 // MB
 }
 
 func loadDatabase(file *ini.File) {
