@@ -3,13 +3,16 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	v1 "github.com/yurongjie2003/ginblog/api/v1"
-	"github.com/yurongjie2003/ginblog/config"
 	"github.com/yurongjie2003/ginblog/middleware"
+	"github.com/yurongjie2003/ginblog/utils/Config"
 )
 
 func Init() error {
-	gin.SetMode(config.AppMode)
+	gin.SetMode(Config.AppMode)
 	r := gin.Default()
+
+	// 为 multipart forms 设置较低的内存限制 (默认是 32 MiB)
+	r.MaxMultipartMemory = Config.MaxFileSize
 
 	auth := r.Group("api/v1")
 	auth.Use(middleware.JwtAuth())
@@ -28,6 +31,7 @@ func Init() error {
 		auth.POST("/article/", v1.AddArticle)
 		auth.PUT("/article/", v1.EditArticle)
 		auth.DELETE("/article/:id", v1.DeleteArticle)
+		auth.POST("/article/cover/", v1.UploadCover)
 	}
 
 	noAuth := r.Group("api/v1")
@@ -48,6 +52,6 @@ func Init() error {
 		// Article模块路由接口
 		noAuth.GET("/article/:id", v1.GetArticleDetail)
 	}
-	err := r.Run(config.HttpPort)
+	err := r.Run(Config.HttpPort)
 	return err
 }

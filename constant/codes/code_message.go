@@ -5,9 +5,13 @@ import "errors"
 type Code int
 
 const (
-	Success   Code = 200
-	Error     Code = 500
-	ErrorArgs Code = 301
+	Success                 Code = 200
+	Error                   Code = 500
+	ErrorArgs               Code = 301
+	ErrNoFileUploaded       Code = 302
+	ErrFileSizeExceedsLimit Code = 303
+	ErrFileTypeNotSupported Code = 304
+	ErrFileUpload           Code = 305
 )
 
 // codes 1000... 用户模块
@@ -31,9 +35,14 @@ const (
 // codes 3000... 文章模块
 
 var codeToMsg = map[Code]string{
-	Success:                "操作成功",
-	Error:                  "服务器内部错误",
-	ErrorArgs:              "参数错误",
+	Success:                 "操作成功",
+	Error:                   "服务器内部错误",
+	ErrorArgs:               "参数错误",
+	ErrNoFileUploaded:       "未上传文件",
+	ErrFileSizeExceedsLimit: "文件大小超限",
+	ErrFileTypeNotSupported: "文件类型不符合",
+	ErrFileUpload:           "文件上传失败",
+
 	ErrorUsernameUsed:      "用户名已被使用",
 	ErrorUserPasswordWrong: "密码错误",
 	ErrorUserNotExist:      "用户不存在",

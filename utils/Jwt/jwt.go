@@ -3,7 +3,7 @@ package Jwt
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/yurongjie2003/ginblog/config"
+	"github.com/yurongjie2003/ginblog/utils/Config"
 	"time"
 )
 
@@ -20,12 +20,12 @@ func GenerateToken(userID uint) (string, error) {
 	claims := CustomClaims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(config.JwtEffectiveTime) * time.Minute)),
-			Issuer:    config.JwtIssuer,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(Config.JwtEffectiveTime) * time.Minute)),
+			Issuer:    Config.JwtIssuer,
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(config.JwtSecret))
+	return token.SignedString([]byte(Config.JwtSecret))
 }
 
 // ParseToken 解析 Jwt Token
@@ -35,7 +35,7 @@ func ParseToken(tokenString string) (*CustomClaims, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
-		return []byte(config.JwtSecret), nil
+		return []byte(Config.JwtSecret), nil
 	})
 
 	// 处理解析错误

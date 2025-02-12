@@ -1,0 +1,59 @@
+name: ginblog
+
+services:
+  mysql:
+    image: mysql:8.0.31
+    restart: always
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=ginblog
+    ports:
+      - '3306:3306'
+      - '33060:33060'
+    volumes:
+      - mysql-conf:/etc/mysql/conf.d
+      - mysql-data:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - ginblog
+  redis:
+    image: bitnami/redis:latest
+    restart: always
+    container_name: redis
+    environment:
+      - REDIS_PASSWORD=123456
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/bitnami/redis/data
+      - redis-conf:/opt/bitnami/redis/mounted-etc
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - ginblog
+  minio:
+    image: bitnami/minio:latest
+    restart: always
+    container_name: minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=yrj2003@minio
+      - MINIO_DEFAULT_BUCKETS=ginblog
+      - /etc/localtime:/etc/localtime:ro
+    volumes:
+      - minio-data:/bitnami/minio/data
+    networks:
+      - ginblog
+
+volumes:
+  mysql-conf:
+  mysql-data:
+  minio-data:
+  redis-data:
+  redis-conf:
+
+networks:
+  ginblog:
