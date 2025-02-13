@@ -5,6 +5,7 @@ import (
 	"github.com/yurongjie2003/ginblog/model"
 	"github.com/yurongjie2003/ginblog/router"
 	"github.com/yurongjie2003/ginblog/utils/Config"
+	"github.com/yurongjie2003/ginblog/utils/Log"
 	"github.com/yurongjie2003/ginblog/utils/Minio"
 	"log"
 	"os"
@@ -20,6 +21,9 @@ func main() {
 
 func Init() error {
 	if err := Config.Init(); err != nil {
+		return err
+	}
+	if err := Log.InitLogger(); err != nil {
 		return err
 	}
 	if err := model.Init(); err != nil {

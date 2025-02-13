@@ -1,15 +1,22 @@
 package router
 
 import (
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	v1 "github.com/yurongjie2003/ginblog/api/v1"
 	"github.com/yurongjie2003/ginblog/middleware"
 	"github.com/yurongjie2003/ginblog/utils/Config"
+	"github.com/yurongjie2003/ginblog/utils/Log"
+	"time"
 )
 
 func Init() error {
 	gin.SetMode(Config.AppMode)
-	r := gin.Default()
+	r := gin.New()
+
+	// 使用Zap替换gin默认Logger
+	r.Use(ginzap.Ginzap(Log.Logger, time.RFC3339, true))
+	r.Use(ginzap.RecoveryWithZap(Log.Logger, true))
 
 	// 为 multipart forms 设置较低的内存限制 (默认是 32 MiB)
 	r.MaxMultipartMemory = Config.MaxFileSize
